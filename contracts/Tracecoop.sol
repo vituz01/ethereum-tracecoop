@@ -3,13 +3,14 @@
 pragma solidity ^0.8.0;
 
 contract Tracecoop {
-    address public owner;
+    address public immutable i_owner;
 
     constructor() {
-        owner = msg.sender;
+        i_owner = msg.sender;
     }
 
     // Area di interesse “Tracciabilità/Qualità”
+
     struct Provenienza {
         string shpLottoProduzione;
         string shpCentroLavorazione;
@@ -36,6 +37,17 @@ contract Tracecoop {
     }
 
     bool public salubrita = true;
+
+    struct TracciabilitaQualita {
+        Provenienza provenienza;
+        Cultivar cultivar;
+        InfoTemporali infoTemporali;
+        Conservazione conservazione;
+        Qualita qualita;
+        bool salubrita;
+    }
+
+    // Area di interesse "Sostenibilità Ambientale"
 
     struct BioTutela {
         bool hasOrganismiUtili;
@@ -67,54 +79,29 @@ contract Tracecoop {
 
     uint256 public quantitaRifiutiProdotta = 10;
 
-    // Area di interesse “Sostenibilità Sociale”
-
-    bool dirittiLavoratori = true;
-
-    /* struct DirittiLavoratori {
-        bool hasAccessoNormativeNazionaliLavoro;
-        bool isContrattiConformi;
-        bool hasSistemaRegistrazioneOreLavorate;
-        bool hasPause;
-        bool hasOreMassimeLavoro;
-        bool hasBustePaga;
-        bool hasInfoSalari;
-        bool impiegaMinori;
-    } */
-
-    bool equitaDiversita = true; // se azienda è conforme, true
-
-    /* struct EquitaDiversita {
-        bool assumeFasceDeboli;
-        bool nonDiscriminazione;
-        bool hasBeneficiSociali;
-    } */
-
-    bool sicurezzaSalute = true; // se azienda è conforme, true
-
-    /* struct SicurezzaSalute {
-        bool visiteMediche;
-        bool rispettaCondSicurezza;
-        bool hasDispositiviSicurezza;
-    } */
-
-    bool hasBeneficiSociali = true;
-
-    bool isAziendaInnovativa = true;
-
-    struct Prodotto {
-        Provenienza provenienza;
-        Cultivar cultivar;
-        InfoTemporali infoTemporali;
-        Conservazione conservazione;
-        Qualita qualita;
-        bool salubrita;
+    struct SostenibilitaAmbiente {
         BioTutela bioTutela;
         WaterTutela waterTutela;
         string dataAnalisiSuolo;
         Emissioni emissioni;
-        MitigazioneClima clima;
+        MitigazioneClima mitigClima;
         uint256 quantitaRifiutiProdotta;
+    }
+
+    // Area di interesse “Sostenibilità Sociale”
+
+    struct SostenibilitaSociale {
+        bool dirittiLavoratori;
+        bool equitaDiversita;
+        bool sicurezzaSalute;
+        bool hasBeneficiSociali;
+        bool isAziendaInnovativa;
+    }
+
+    struct Prodotto {
+        TracciabilitaQualita traccQual;
+        SostenibilitaAmbiente sostAmb;
+        SostenibilitaSociale sostSoc;
     }
 
     Prodotto[] public listaProdotti;
@@ -132,6 +119,16 @@ contract Tracecoop {
 
     Qualita public qualita =
         Qualita({dataClassificazione: "24/04/2020", percentualeMercato: 30});
+
+    TracciabilitaQualita traccQual =
+        TracciabilitaQualita({
+            provenienza: provenienza,
+            cultivar: cultivar,
+            infoTemporali: infoTempo,
+            conservazione: conservazione,
+            qualita: qualita,
+            salubrita: salubrita
+        });
 
     BioTutela public bioTutela =
         BioTutela({
@@ -162,23 +159,29 @@ contract Tracecoop {
             distanzaDaCampoACentroLavorazione: 2
         });
 
-    Prodotto melograno =
-        Prodotto({
-            provenienza: provenienza,
-            cultivar: cultivar,
-            infoTemporali: infoTempo,
-            conservazione: conservazione,
-            qualita: qualita,
-            salubrita: salubrita,
+    SostenibilitaAmbiente sostAmb =
+        SostenibilitaAmbiente({
             bioTutela: bioTutela,
             waterTutela: waterTutela,
-            dataAnalisiSuolo: dataAnalisiSuolo,
             emissioni: emissioni,
-            clima: clima,
+            mitigClima: clima,
+            dataAnalisiSuolo: dataAnalisiSuolo,
             quantitaRifiutiProdotta: quantitaRifiutiProdotta
         });
 
+    SostenibilitaSociale sostSoc =
+        SostenibilitaSociale({
+            dirittiLavoratori: true,
+            equitaDiversita: true,
+            sicurezzaSalute: true,
+            hasBeneficiSociali: true,
+            isAziendaInnovativa: true
+        });
+
     // metodi per modificare e visualizzare le info sul prodotto
+
+    Prodotto melograno =
+        Prodotto({traccQual: traccQual, sostAmb: sostAmb, sostSoc: sostSoc});
 
     function addProdotto() public {
         listaProdotti.push(melograno);
