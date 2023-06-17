@@ -3,6 +3,8 @@
 pragma solidity ^0.8.0;
 
 contract Tracecoop {
+    string idProdotto;
+
     address public immutable i_owner;
 
     constructor() {
@@ -12,8 +14,8 @@ contract Tracecoop {
     // Area di interesse “Tracciabilità/Qualità”
 
     struct Provenienza {
-        string shpLottoProduzione;
-        string shpCentroLavorazione;
+        string shpLottoProduzione; // da definire dato shapefile lotto prod
+        string shpCentroLavorazione; // da definire dato shapefile lotto lav (nota: idLottoProd === idLottoLav)
     }
 
     struct Cultivar {
@@ -67,10 +69,11 @@ contract Tracecoop {
     string public dataAnalisiSuolo = "24/10/2020";
 
     struct Emissioni {
-        // nota: dati per Emissioni e MitigazioneClima possono coincidere
         uint256 oreMacchinaPerEttaro;
         uint256 distanzaDaCampoACentroLavorazione;
     }
+
+    // nota: dati per Emissioni e MitigazioneClima possono coincidere
 
     struct MitigazioneClima {
         uint256 oreMacchinaPerEttaro;
@@ -95,13 +98,22 @@ contract Tracecoop {
         bool equitaDiversita;
         bool sicurezzaSalute;
         bool hasBeneficiSociali;
-        bool isAziendaInnovativa;
     }
 
+    bool isAziendaInnovativa;
+
     struct Prodotto {
+        string idProdotto;
+        string nomeSpecie;
         TracciabilitaQualita traccQual;
         SostenibilitaAmbiente sostAmb;
         SostenibilitaSociale sostSoc;
+        bool isAziendaInnovativa;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == i_owner);
+        _;
     }
 
     Prodotto[] public listaProdotti;
@@ -109,7 +121,8 @@ contract Tracecoop {
     Provenienza public provenienza =
         Provenienza({shpLottoProduzione: "Ciao", shpCentroLavorazione: "Ciao"});
 
-    Cultivar public cultivar = Cultivar({nome: "Ciao", isLabCertified: true});
+    Cultivar public cultivar =
+        Cultivar({nome: "WONDERFUL", isLabCertified: true});
 
     InfoTemporali public infoTempo =
         InfoTemporali({anniImpianto: 10, dataRaccolta: "10/06/2019"});
@@ -174,16 +187,24 @@ contract Tracecoop {
             dirittiLavoratori: true,
             equitaDiversita: true,
             sicurezzaSalute: true,
-            hasBeneficiSociali: true,
+            hasBeneficiSociali: true
+        });
+
+    Prodotto melograno =
+        Prodotto({
+            idProdotto: "melograno1",
+            nomeSpecie: "MELAGRANA",
+            traccQual: traccQual,
+            sostAmb: sostAmb,
+            sostSoc: sostSoc,
             isAziendaInnovativa: true
         });
 
     // metodi per modificare e visualizzare le info sul prodotto
 
-    Prodotto melograno =
-        Prodotto({traccQual: traccQual, sostAmb: sostAmb, sostSoc: sostSoc});
+    // addProdotto onlyOwner ()
 
-    function addProdotto() public {
-        listaProdotti.push(melograno);
-    }
+    // updateProdotto onlyOwner ()
+
+    // removeProdotto onlyOwner ()
 }
