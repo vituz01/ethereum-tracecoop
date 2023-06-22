@@ -3,6 +3,7 @@
 pragma solidity ^0.8.0;
 
 contract Tracecoop {
+
     string idProdotto;
 
     address public immutable i_owner;
@@ -38,8 +39,6 @@ contract Tracecoop {
         uint256 percentualeMercato;
     }
 
-    bool public salubrita = true;
-
     struct TracciabilitaQualita {
         Provenienza provenienza;
         Cultivar cultivar;
@@ -66,8 +65,6 @@ contract Tracecoop {
         bool hasConsiglioIrriguo;
     }
 
-    string public dataAnalisiSuolo = "24/10/2020";
-
     struct Emissioni {
         uint256 oreMacchinaPerEttaro;
         uint256 distanzaDaCampoACentroLavorazione;
@@ -79,8 +76,6 @@ contract Tracecoop {
         uint256 oreMacchinaPerEttaro;
         uint256 distanzaDaCampoACentroLavorazione;
     }
-
-    uint256 public quantitaRifiutiProdotta = 10;
 
     struct SostenibilitaAmbiente {
         BioTutela bioTutela;
@@ -100,8 +95,6 @@ contract Tracecoop {
         bool hasBeneficiSociali;
     }
 
-    bool isAziendaInnovativa;
-
     struct Prodotto {
         string idProdotto;
         string nomeSpecie;
@@ -111,100 +104,31 @@ contract Tracecoop {
         bool isAziendaInnovativa;
     }
 
-    modifier onlyOwner() {
-        require(msg.sender == i_owner);
-        _;
-    }
+    modifier onlyOwner {
+      require(msg.sender == i_owner);
+      _;
+   }
 
     Prodotto[] public listaProdotti;
 
-    Provenienza public provenienza =
-        Provenienza({shpLottoProduzione: "Ciao", shpCentroLavorazione: "Ciao"});
-
-    Cultivar public cultivar =
-        Cultivar({nome: "WONDERFUL", isLabCertified: true});
-
-    InfoTemporali public infoTempo =
-        InfoTemporali({anniImpianto: 10, dataRaccolta: "10/06/2019"});
-
-    Conservazione public conservazione =
-        Conservazione({nGiorni: 7, temperatura: 25});
-
-    Qualita public qualita =
-        Qualita({dataClassificazione: "24/04/2020", percentualeMercato: 30});
-
-    TracciabilitaQualita traccQual =
-        TracciabilitaQualita({
-            provenienza: provenienza,
-            cultivar: cultivar,
-            infoTemporali: infoTempo,
-            conservazione: conservazione,
-            qualita: qualita,
-            salubrita: salubrita
-        });
-
-    BioTutela public bioTutela =
-        BioTutela({
-            hasOrganismiUtili: true,
-            hasIncolti: true,
-            hasZoneRifugio: true,
-            hasSiepi: true,
-            hasMacchiaMediterranea: true
-        });
-
-    WaterTutela public waterTutela =
-        WaterTutela({
-            dataAnalisiAcque: "24/11/2020",
-            acquaPerEttaro: 10,
-            hasStazioniAgrometeo: true,
-            hasConsiglioIrriguo: true
-        });
-
-    Emissioni public emissioni =
-        Emissioni({
-            oreMacchinaPerEttaro: 10,
-            distanzaDaCampoACentroLavorazione: 2
-        });
-
-    MitigazioneClima public clima =
-        MitigazioneClima({
-            oreMacchinaPerEttaro: 10,
-            distanzaDaCampoACentroLavorazione: 2
-        });
-
-    SostenibilitaAmbiente sostAmb =
-        SostenibilitaAmbiente({
-            bioTutela: bioTutela,
-            waterTutela: waterTutela,
-            emissioni: emissioni,
-            mitigClima: clima,
-            dataAnalisiSuolo: dataAnalisiSuolo,
-            quantitaRifiutiProdotta: quantitaRifiutiProdotta
-        });
-
-    SostenibilitaSociale sostSoc =
-        SostenibilitaSociale({
-            dirittiLavoratori: true,
-            equitaDiversita: true,
-            sicurezzaSalute: true,
-            hasBeneficiSociali: true
-        });
-
-    Prodotto melograno =
-        Prodotto({
-            idProdotto: "melograno1",
-            nomeSpecie: "MELAGRANA",
-            traccQual: traccQual,
-            sostAmb: sostAmb,
-            sostSoc: sostSoc,
-            isAziendaInnovativa: true
-        });
-
     // metodi per modificare e visualizzare le info sul prodotto
 
-    // addProdotto onlyOwner ()
+    function addProdotto (
+        string memory _idProdotto, 
+        string memory _nomeSpecie, 
+        TracciabilitaQualita memory _traccQual, 
+        SostenibilitaAmbiente memory _sostAmb, 
+        SostenibilitaSociale memory _sostSoc, 
+        bool _isAziendaInnovativa
+        ) public payable onlyOwner {
+        Prodotto memory newProdotto = Prodotto(_idProdotto, _nomeSpecie, _traccQual, _sostAmb, _sostSoc, _isAziendaInnovativa);
+        listaProdotti.push(newProdotto);
+    }
 
     // updateProdotto onlyOwner ()
 
     // removeProdotto onlyOwner ()
+
+    // getProdottoById
+
 }
