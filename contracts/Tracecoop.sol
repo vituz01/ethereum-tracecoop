@@ -16,7 +16,7 @@ contract Tracecoop {
 
     struct Provenienza {
         string shpLottoProduzione; // da definire dato shapefile lotto prod
-        string shpCentroLavorazione; // da definire dato shapefile lotto lav (nota: idLottoProd === idLottoLav???)
+        string shpCentroLavorazione; // da definire dato shapefile lotto lav (nota: idLottoProd === idLottoLav)
     }
 
     struct Cultivar {
@@ -36,7 +36,7 @@ contract Tracecoop {
 
     struct Qualita {
         string dataClassificazione;
-        uint256 percentualeMercato; 
+        uint256 percentualeMercato;
     }
 
     struct TracciabilitaQualita {
@@ -120,8 +120,8 @@ contract Tracecoop {
         SostenibilitaAmbiente memory _sostAmb, 
         SostenibilitaSociale memory _sostSoc, 
         bool _isAziendaInnovativa
-        ) public onlyOwner {
-        Prodotto memory newProdotto = Prodotto(_idProdotto, _nomeSpecie, _traccQual, _sostAmb ,_sostSoc,_isAziendaInnovativa);
+        ) public payable onlyOwner {
+        Prodotto memory newProdotto = Prodotto(_idProdotto, _nomeSpecie, _traccQual, _sostAmb, _sostSoc, _isAziendaInnovativa);
         listaProdotti.push(newProdotto);
     }
 
