@@ -130,7 +130,7 @@ contract Tracecoop {
         idToProdotto[_idProdotto] = newProdotto;
     }
 
-    function getProductById(string memory _idProdotto) public view onlyOwner returns(Prodotto memory) {
+    function getProdottoById(string memory _idProdotto) public view onlyOwner returns(Prodotto memory) {
         require(checkIfProdottoIsPresent(_idProdotto) == true, "Product not found");
         return idToProdotto[_idProdotto];
     }
@@ -173,6 +173,8 @@ contract Tracecoop {
         listaProdotti[index].isAziendaInnovativa = _isAziendaInnovativa;
         idToProdotto[_idProdotto] = listaProdotti[index];
     }
+
+    //utility function
 
     function checkIfProdottoIsPresent (string memory _idProdotto) internal view returns(bool) {
         bool check;
