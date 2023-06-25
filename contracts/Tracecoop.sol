@@ -3,6 +3,7 @@
 pragma solidity ^0.8.0;
 
 contract Tracecoop {
+
     string idProdotto;
 
     address public immutable i_owner;
@@ -35,7 +36,7 @@ contract Tracecoop {
 
     struct Qualita {
         string dataClassificazione;
-        uint256 percentualeMercato;
+        uint256 percentualeMercato; 
     }
 
     struct TracciabilitaQualita {
@@ -103,63 +104,82 @@ contract Tracecoop {
         bool isAziendaInnovativa;
     }
 
-    modifier onlyOwner() {
-        require(msg.sender == i_owner, "User is not owner");
-        _;
+    modifier onlyOwner {
+      require(msg.sender == i_owner, "User is not owner");
+      _;
     }
 
-    mapping(string => Prodotto) public getProdottoByID;
+    mapping (string => Prodotto) idToProdotto;
 
     Prodotto[] public listaProdotti;
 
     // metodi per modificare e visualizzare le info sul prodotto
 
-    function addProdotto(
-        string memory _idProdotto,
-        string memory _nomeSpecie,
-        TracciabilitaQualita memory _traccQual,
-        SostenibilitaAmbiente memory _sostAmb,
-        SostenibilitaSociale memory _sostSoc,
+    function addProdotto (
+        string memory _idProdotto, 
+        string memory _nomeSpecie, 
+        TracciabilitaQualita memory _traccQual, 
+        SostenibilitaAmbiente memory _sostAmb, 
+        SostenibilitaSociale memory _sostSoc, 
         bool _isAziendaInnovativa
-    ) public onlyOwner {
-        bool check = checkIdProdotto(_idProdotto);
-        require(check == false, "Product already registered");
-        Prodotto memory newProdotto = Prodotto(
-            _idProdotto,
-            _nomeSpecie,
-            _traccQual,
-            _sostAmb,
-            _sostSoc,
-            _isAziendaInnovativa
-        );
+        ) public onlyOwner {
+
+        require(checkIfProdottoIsPresent(_idProdotto) == false, "Product already registered");
+        Prodotto memory newProdotto = Prodotto(_idProdotto, _nomeSpecie, _traccQual, _sostAmb ,_sostSoc,_isAziendaInnovativa);
         listaProdotti.push(newProdotto);
-        getProdottoByID[_idProdotto] = newProdotto;
+        idToProdotto[_idProdotto] = newProdotto;
+    }
+
+    function getProdottoById(string memory _idProdotto) public view onlyOwner returns(Prodotto memory) {
+        require(checkIfProdottoIsPresent(_idProdotto) == true, "Product not found");
+        return idToProdotto[_idProdotto];
     }
 
     function removeProdotto(string memory _idProdotto) public onlyOwner {
+        require(checkIfProdottoIsPresent(_idProdotto) == true, "Product not found");
         uint256 index;
-        for (uint256 i = 0; i < listaProdotti.length; i++) {
-            if (
-                keccak256(bytes(listaProdotti[i].idProdotto)) ==
-                keccak256(bytes(_idProdotto))
-            ) {
+        for(uint256 i=0; i < listaProdotti.length; i++) {
+            if(keccak256(bytes(listaProdotti[i].idProdotto)) == keccak256(bytes(_idProdotto))) {
                 index = i;
                 break;
             }
         }
         delete listaProdotti[index];
-        delete (getProdottoByID[_idProdotto]);
+        delete(idToProdotto[_idProdotto]);
     }
 
-    function checkIdProdotto(
-        string memory _idProdotto
-    ) public view returns (bool) {
+    function updateInfoProdotto(
+        string memory _idProdotto, 
+        string memory _nomeSpecie, 
+        TracciabilitaQualita memory _traccQual, 
+        SostenibilitaAmbiente memory _sostAmb, 
+        SostenibilitaSociale memory _sostSoc, 
+        bool _isAziendaInnovativa
+        ) public onlyOwner {
+        
+        require(checkIfProdottoIsPresent(_idProdotto) == true, "Product not found");
+        uint256 index;
+        for(uint256 i=0; i < listaProdotti.length; i++) {
+            if(keccak256(bytes(listaProdotti[i].idProdotto)) == keccak256(bytes(_idProdotto))) {
+                index = i;
+                break;
+            }
+        }
+        listaProdotti[index].idProdotto = _idProdotto;
+        listaProdotti[index].nomeSpecie = _nomeSpecie;
+        listaProdotti[index].traccQual = _traccQual;
+        listaProdotti[index].sostAmb = _sostAmb;
+        listaProdotti[index].sostSoc = _sostSoc;
+        listaProdotti[index].isAziendaInnovativa = _isAziendaInnovativa;
+        idToProdotto[_idProdotto] = listaProdotti[index];
+    }
+
+    //utility function
+
+    function checkIfProdottoIsPresent (string memory _idProdotto) internal view returns(bool) {
         bool check;
-        for (uint256 i = 0; i < listaProdotti.length; i++) {
-            if (
-                keccak256(bytes(listaProdotti[i].idProdotto)) ==
-                keccak256(bytes(_idProdotto))
-            ) {
+        for (uint256 i=0; i < listaProdotti.length; i++) {
+            if(keccak256(bytes(listaProdotti[i].idProdotto)) == keccak256(bytes(_idProdotto))) {
                 check = true;
                 break;
             }
@@ -167,5 +187,4 @@ contract Tracecoop {
         return check;
     }
 
-    // updateProdotto onlyOwner ()
 }
