@@ -3,7 +3,6 @@
 pragma solidity ^0.8.0;
 
 contract Tracecoop {
-
     string idProdotto;
 
     address public immutable i_owner;
@@ -16,7 +15,7 @@ contract Tracecoop {
 
     struct Provenienza {
         string shpLottoProduzione; // da definire dato shapefile lotto prod
-        string shpCentroLavorazione; // da definire dato shapefile lotto lav (nota: idLottoProd === idLottoLav)
+        string shpCentroLavorazione; // da definire dato shapefile lotto lav (nota: idLottoProd === idLottoLav???)
     }
 
     struct Cultivar {
@@ -104,31 +103,69 @@ contract Tracecoop {
         bool isAziendaInnovativa;
     }
 
-    modifier onlyOwner {
-      require(msg.sender == i_owner);
-      _;
-   }
+    modifier onlyOwner() {
+        require(msg.sender == i_owner, "User is not owner");
+        _;
+    }
+
+    mapping(string => Prodotto) public getProdottoByID;
 
     Prodotto[] public listaProdotti;
 
     // metodi per modificare e visualizzare le info sul prodotto
 
-    function addProdotto (
-        string memory _idProdotto, 
-        string memory _nomeSpecie, 
-        TracciabilitaQualita memory _traccQual, 
-        SostenibilitaAmbiente memory _sostAmb, 
-        SostenibilitaSociale memory _sostSoc, 
+    function addProdotto(
+        string memory _idProdotto,
+        string memory _nomeSpecie,
+        TracciabilitaQualita memory _traccQual,
+        SostenibilitaAmbiente memory _sostAmb,
+        SostenibilitaSociale memory _sostSoc,
         bool _isAziendaInnovativa
-        ) public payable onlyOwner {
-        Prodotto memory newProdotto = Prodotto(_idProdotto, _nomeSpecie, _traccQual, _sostAmb, _sostSoc, _isAziendaInnovativa);
+    ) public onlyOwner {
+        bool check = checkIdProdotto(_idProdotto);
+        require(check == false, "Product already registered");
+        Prodotto memory newProdotto = Prodotto(
+            _idProdotto,
+            _nomeSpecie,
+            _traccQual,
+            _sostAmb,
+            _sostSoc,
+            _isAziendaInnovativa
+        );
         listaProdotti.push(newProdotto);
+        getProdottoByID[_idProdotto] = newProdotto;
+    }
+
+    function removeProdotto(string memory _idProdotto) public onlyOwner {
+        uint256 index;
+        for (uint256 i = 0; i < listaProdotti.length; i++) {
+            if (
+                keccak256(bytes(listaProdotti[i].idProdotto)) ==
+                keccak256(bytes(_idProdotto))
+            ) {
+                index = i;
+                break;
+            }
+        }
+        delete listaProdotti[index];
+        delete (getProdottoByID[_idProdotto]);
+    }
+
+    function checkIdProdotto(
+        string memory _idProdotto
+    ) public view returns (bool) {
+        bool check;
+        for (uint256 i = 0; i < listaProdotti.length; i++) {
+            if (
+                keccak256(bytes(listaProdotti[i].idProdotto)) ==
+                keccak256(bytes(_idProdotto))
+            ) {
+                check = true;
+                break;
+            }
+        }
+        return check;
     }
 
     // updateProdotto onlyOwner ()
-
-    // removeProdotto onlyOwner ()
-
-    // getProdottoById
-
 }
