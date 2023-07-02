@@ -1,0 +1,59 @@
+{
+    "idProdotto": "melograno1",
+    "nomeSpecie": "MELAGRANA",
+    "TracciabilitaQualita": {
+        "Provenienza": {
+            "shpLottoProduzione": "shapefileProd",
+            "shpCentroLavorazione": "shapefileLav"
+        },
+        "Cultivar": {
+            "nome": "nomeCultivar",
+            "isLabCertified": true
+        },
+        "InfoTemporali": {
+            "anniImpianto": 10,
+            "dataRaccolta": "dataRaccolta"
+        },
+        "Conservazione": {
+            "nGiorni": 7,
+            "temperatura": 25
+        },
+        "Qualita": {
+            "dataClassificazione": "dataClassificazione",
+            "percentualeMercato": 30
+        },
+        "salubrita": true
+    },
+    "SostenibilitaAmbiente": {
+        "Biotutela": {
+            "hasOrganismiUtili": true,
+            "hasIncolti": true,
+            "hasZoneRifugio": true,
+            "hasSiepi": true,
+            "hasMacchiaMediterranea": true
+        },
+        "WaterTutela": {
+            "dataAnalisiAcque": "dataAnalisiAcque",
+            "acquaPerEttaro": 10,
+            "hasStazioniAgrometeo": true,
+            "hasConsiglioIrriguo": true
+        },
+        "dataAnalisiSuolo": "dataAnalisiSuolo",
+        "Emissioni": {
+            "oreMacchinaPerEttaro": 10,
+            "distanzaDaCampoACentroLavorazione": 10
+        },
+        "MitigazioneClima": {
+            "oreMacchinaPerEttaro": 10,
+            "distanzaDaCampoACentroLavorazione": 10
+        },
+        "quantitaRifiutiProdotta": 20
+    },
+    "SostenibilitaSociale": {
+        "dirittiLavoratori": true,
+        "equitaDiversita": true,
+        "sicurezzaSalute": true,
+        "hasBeneficiSociali": true
+    },
+    "isAziendaInnovativa": true
+}
