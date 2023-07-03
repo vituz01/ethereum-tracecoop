@@ -138,18 +138,13 @@ contract Tracecoop {
         idToProdotto[_idProdotto] = newProdotto;
     }
 
-    function getListaProdotti()
-        public
-        view
-        onlyOwner
-        returns (Prodotto[] memory)
-    {
+    function getListaProdotti() public view returns (Prodotto[] memory) {
         return listaProdotti;
     }
 
     function getProdottoById(
         string memory _idProdotto
-    ) public view onlyOwner returns (Prodotto memory) {
+    ) public view returns (Prodotto memory) {
         require(
             checkIfProdottoIsPresent(_idProdotto) == true,
             "Product not found"
