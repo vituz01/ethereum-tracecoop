@@ -14,7 +14,7 @@ contract Tracecoop {
     // Area di interesse “Tracciabilità/Qualità”
 
     struct Provenienza {
-        string shpLottoProduzione; // da definire dato shapefile lotto prod
+        string[] shpLottoProduzione; // da definire dato shapefile lotto prod
         string shpCentroLavorazione; // da definire dato shapefile lotto lav (nota: idLottoProd === idLottoLav???)
     }
 
@@ -35,7 +35,7 @@ contract Tracecoop {
 
     struct Qualita {
         string dataClassificazione;
-        uint256 percentualeMercato;
+        uint256 percentualePerMercato;
     }
 
     struct TracciabilitaQualita {
@@ -219,4 +219,7 @@ contract Tracecoop {
         }
         return check;
     }
+
+
+
 }
