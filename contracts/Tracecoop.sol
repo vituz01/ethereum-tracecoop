@@ -1,8 +1,9 @@
 // SPDX-License-Identifier:MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 contract Tracecoop {
+
     string idProdotto;
 
     address public immutable i_owner;
@@ -14,7 +15,7 @@ contract Tracecoop {
     // Area di interesse “Tracciabilità/Qualità”
 
     struct Provenienza {
-        string shpLottoProduzione; // da definire dato shapefile lotto prod
+        string[] shpLottoProduzione; // da definire dato shapefile lotto prod
         string shpCentroLavorazione; // da definire dato shapefile lotto lav (nota: idLottoProd === idLottoLav???)
     }
 
@@ -24,7 +25,7 @@ contract Tracecoop {
     }
 
     struct InfoTemporali {
-        uint256 anniImpianto;
+        uint256 annoImpianto;
         string dataRaccolta;
     }
 
@@ -35,7 +36,7 @@ contract Tracecoop {
 
     struct Qualita {
         string dataClassificazione;
-        uint256 percentualeMercato;
+        uint256 percentualePerMercato;
     }
 
     struct TracciabilitaQualita {
@@ -112,7 +113,7 @@ contract Tracecoop {
 
     Prodotto[] internal listaProdotti;
 
-    // metodi per modificare e visualizzare le info sul prodotto
+    // product CRUD operations
 
     function addProdotto(
         string memory _idProdotto,
@@ -202,6 +203,18 @@ contract Tracecoop {
         idToProdotto[_idProdotto] = listaProdotti[index];
     }
 
+    // retrieve specific output
+
+    function getAnniImpianto(string memory _idProdotto) public view returns(uint256) {
+        Prodotto memory target = getProdottoById(_idProdotto);
+        uint256 timestamp = block.timestamp;
+        uint256 blockYear = (timestamp / 31536000) + 1970; // 31536000 seconds in a year
+        uint256 annoCostruzioneImpianto = target.traccQual.infoTemporali.annoImpianto;
+        uint256 anniImpianto = blockYear - annoCostruzioneImpianto;
+        return anniImpianto;
+    }
+
+
     //utility function
 
     function checkIfProdottoIsPresent(
@@ -219,4 +232,7 @@ contract Tracecoop {
         }
         return check;
     }
+
+
+
 }
