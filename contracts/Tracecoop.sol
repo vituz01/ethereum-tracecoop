@@ -3,7 +3,6 @@
 pragma solidity ^0.8.20;
 
 contract Tracecoop {
-
     string idProdotto;
 
     address public immutable i_owner;
@@ -36,7 +35,9 @@ contract Tracecoop {
 
     struct Qualita {
         string dataClassificazione;
-        uint256 percentualePerMercato;
+        uint256 kgPerMercato;
+        uint256 kgPerIndustria;
+        uint256 kgPerScarto;
     }
 
     struct TracciabilitaQualita {
@@ -205,17 +206,31 @@ contract Tracecoop {
 
     // retrieve specific output
 
-    function getAnniImpianto(string memory _idProdotto) public view returns(uint256) {
+    function getAnniImpianto(
+        string memory _idProdotto
+    ) public view returns (uint256) {
         Prodotto memory target = getProdottoById(_idProdotto);
         uint256 timestamp = block.timestamp;
         uint256 blockYear = (timestamp / 31536000) + 1970; // 31536000 seconds in a year
-        uint256 annoCostruzioneImpianto = target.traccQual.infoTemporali.annoImpianto;
+        uint256 annoCostruzioneImpianto = target
+            .traccQual
+            .infoTemporali
+            .annoImpianto;
         uint256 anniImpianto = blockYear - annoCostruzioneImpianto;
         return anniImpianto;
     }
 
+    function getPercentualeMercato(
+        string memory _idProdotto
+    ) public view returns (uint256) {
+        Prodotto memory target = getProdottoById(_idProdotto);
+        uint256 totale = target.traccQual.qualita.kgPerMercato +
+            target.traccQual.qualita.kgPerIndustria +
+            target.traccQual.qualita.kgPerScarto;
+        return totale;
+    }
 
-    //utility function
+    //utility functions
 
     function checkIfProdottoIsPresent(
         string memory _idProdotto
@@ -232,7 +247,4 @@ contract Tracecoop {
         }
         return check;
     }
-
-
-
 }
