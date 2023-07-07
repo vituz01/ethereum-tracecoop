@@ -3,6 +3,7 @@
 pragma solidity ^0.8.20;
 
 contract Tracecoop {
+
     string idProdotto;
 
     address public immutable i_owner;
@@ -14,8 +15,8 @@ contract Tracecoop {
     // Area di interesse “Tracciabilità/Qualità”
 
     struct Provenienza {
-        string[] shpLottoProduzione; // da definire dato shapefile lotto prod
-        string shpCentroLavorazione; // da definire dato shapefile lotto lav (nota: idLottoProd === idLottoLav???)
+        string[] shpLottoProduzione;
+        string shpCentroLavorazione;
     }
 
     struct Cultivar {
@@ -206,29 +207,21 @@ contract Tracecoop {
 
     // retrieve specific output
 
-    function getAnniImpianto(
-        string memory _idProdotto
-    ) public view returns (uint256) {
+    function getAnniImpianto(string memory _idProdotto) public view returns(uint256) {
         Prodotto memory target = getProdottoById(_idProdotto);
         uint256 timestamp = block.timestamp;
         uint256 blockYear = (timestamp / 31536000) + 1970; // 31536000 seconds in a year
-        uint256 annoCostruzioneImpianto = target
-            .traccQual
-            .infoTemporali
-            .annoImpianto;
+        uint256 annoCostruzioneImpianto = target.traccQual.infoTemporali.annoImpianto;
         uint256 anniImpianto = blockYear - annoCostruzioneImpianto;
         return anniImpianto;
     }
 
-    function getPercentualeMercato(
-        string memory _idProdotto
-    ) public view returns (uint256) {
+    function getPercentualeMercato(string memory _idProdotto) public view returns(uint256) {
         Prodotto memory target = getProdottoById(_idProdotto);
-        uint256 totale = target.traccQual.qualita.kgPerMercato +
-            target.traccQual.qualita.kgPerIndustria +
-            target.traccQual.qualita.kgPerScarto;
+        uint256 totale = target.traccQual.qualita.kgPerMercato + target.traccQual.qualita.kgPerIndustria + target.traccQual.qualita.kgPerScarto;
         return totale;
     }
+
 
     //utility functions
 
@@ -247,4 +240,5 @@ contract Tracecoop {
         }
         return check;
     }
+
 }
