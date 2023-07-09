@@ -1,6 +1,6 @@
 // SPDX-License-Identifier:MIT
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.18; 
 
 contract Tracecoop {
 
@@ -15,8 +15,8 @@ contract Tracecoop {
     // Area di interesse “Tracciabilità/Qualità”
 
     struct Provenienza {
-        string[] shpLottoProduzione;
-        string shpCentroLavorazione;
+        string[] comuniLottoProduzione;
+        string comuneCentroLavorazione;
     }
 
     struct Cultivar {
@@ -115,7 +115,7 @@ contract Tracecoop {
 
     Prodotto[] internal listaProdotti;
 
-    // product CRUD operations
+    // CRUD operations
 
     function addProdotto(
         string memory _idProdotto,
@@ -205,7 +205,7 @@ contract Tracecoop {
         idToProdotto[_idProdotto] = listaProdotti[index];
     }
 
-    // retrieve specific output
+    // Retrieve specific output (anni impianto arboreo, percentuale prodotto per Mercato)
 
     function getAnniImpianto(string memory _idProdotto) public view returns(uint256) {
         Prodotto memory target = getProdottoById(_idProdotto);
