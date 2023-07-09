@@ -1,6 +1,6 @@
 // SPDX-License-Identifier:MIT
 
-pragma solidity ^0.8.18; 
+pragma solidity ^0.8.18;
 
 contract Tracecoop {
 
@@ -205,7 +205,7 @@ contract Tracecoop {
         idToProdotto[_idProdotto] = listaProdotti[index];
     }
 
-    // Retrieve specific output (anni impianto arboreo, percentuale prodotto per Mercato)
+    // Retrieve specific output (anni impianto arboreo)
 
     function getAnniImpianto(string memory _idProdotto) public view returns(uint256) {
         Prodotto memory target = getProdottoById(_idProdotto);
@@ -216,11 +216,16 @@ contract Tracecoop {
         return anniImpianto;
     }
 
+    /* Does not work since Solidity does not support floating point division
+
     function getPercentualeMercato(string memory _idProdotto) public view returns(uint256) {
         Prodotto memory target = getProdottoById(_idProdotto);
         uint256 totale = target.traccQual.qualita.kgPerMercato + target.traccQual.qualita.kgPerIndustria + target.traccQual.qualita.kgPerScarto;
-        return totale;
+        uint256 percentualeMercato = (target.traccQual.qualita.kgPerMercato * 1e18 / totale);
+        return percentualeMercato;
     }
+
+    */
 
 
     //utility functions
