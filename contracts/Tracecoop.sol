@@ -3,7 +3,6 @@
 pragma solidity ^0.8.18;
 
 contract Tracecoop {
-
     string idProdotto;
 
     address public immutable i_owner;
@@ -72,19 +71,11 @@ contract Tracecoop {
         uint256 distanzaDaCampoACentroLavorazione;
     }
 
-    // nota: dati per Emissioni e MitigazioneClima possono coincidere
-
-    struct MitigazioneClima {
-        uint256 oreMacchinaPerEttaro;
-        uint256 distanzaDaCampoACentroLavorazione;
-    }
-
     struct SostenibilitaAmbiente {
         BioTutela bioTutela;
         WaterTutela waterTutela;
         string dataAnalisiSuolo;
         Emissioni emissioni;
-        MitigazioneClima mitigClima;
         uint256 quantitaRifiutiProdotta;
     }
 
@@ -207,11 +198,16 @@ contract Tracecoop {
 
     // Retrieve specific output (anni impianto arboreo)
 
-    function getAnniImpianto(string memory _idProdotto) public view returns(uint256) {
+    function getAnniImpianto(
+        string memory _idProdotto
+    ) public view returns (uint256) {
         Prodotto memory target = getProdottoById(_idProdotto);
         uint256 timestamp = block.timestamp;
         uint256 blockYear = (timestamp / 31536000) + 1970; // 31536000 seconds in a year
-        uint256 annoCostruzioneImpianto = target.traccQual.infoTemporali.annoImpianto;
+        uint256 annoCostruzioneImpianto = target
+            .traccQual
+            .infoTemporali
+            .annoImpianto;
         uint256 anniImpianto = blockYear - annoCostruzioneImpianto;
         return anniImpianto;
     }
@@ -221,12 +217,11 @@ contract Tracecoop {
     function getPercentualeMercato(string memory _idProdotto) public view returns(uint256) {
         Prodotto memory target = getProdottoById(_idProdotto);
         uint256 totale = target.traccQual.qualita.kgPerMercato + target.traccQual.qualita.kgPerIndustria + target.traccQual.qualita.kgPerScarto;
-        uint256 percentualeMercato = (target.traccQual.qualita.kgPerMercato * 1e18 / totale);
+        uint256 percentualeMercato = (target.traccQual.qualita.kgPerMercato / totale) * 100;
         return percentualeMercato;
     }
 
     */
-
 
     //utility functions
 
@@ -245,5 +240,4 @@ contract Tracecoop {
         }
         return check;
     }
-
 }
