@@ -2,7 +2,10 @@
 
 pragma solidity ^0.8.18;
 
+import "hardhat/console.sol";
+
 contract Tracecoop {
+
     string idProdotto;
 
     address public immutable i_owner;
@@ -98,7 +101,7 @@ contract Tracecoop {
     }
 
     modifier onlyOwner() {
-        require(msg.sender == i_owner, "User is not owner");
+        require(msg.sender == i_owner, "ERROR: User is not owner");
         _;
     }
 
@@ -118,7 +121,7 @@ contract Tracecoop {
     ) public onlyOwner {
         require(
             checkIfProdottoIsPresent(_idProdotto) == false,
-            "Product already registered"
+            "ERROR: Product already registered"
         );
         Prodotto memory newProdotto = Prodotto(
             _idProdotto,
@@ -130,9 +133,12 @@ contract Tracecoop {
         );
         listaProdotti.push(newProdotto);
         idToProdotto[_idProdotto] = newProdotto;
+        
+        console.log("INFO: Successful addProdotto execution");
     }
 
     function getListaProdotti() public view returns (Prodotto[] memory) {
+        console.log("INFO: Successful getListaProdotti execution");
         return listaProdotti;
     }
 
@@ -141,15 +147,16 @@ contract Tracecoop {
     ) public view returns (Prodotto memory) {
         require(
             checkIfProdottoIsPresent(_idProdotto) == true,
-            "Product not found"
+            "ERROR: Product not found"
         );
+        console.log("INFO: Successful getProdottoById execution");
         return idToProdotto[_idProdotto];
     }
 
     function removeProdotto(string memory _idProdotto) public onlyOwner {
         require(
             checkIfProdottoIsPresent(_idProdotto) == true,
-            "Product not found"
+            "ERROR: Product not found"
         );
         uint256 index;
         for (uint256 i = 0; i < listaProdotti.length; i++) {
@@ -163,6 +170,7 @@ contract Tracecoop {
         }
         delete listaProdotti[index];
         delete (idToProdotto[_idProdotto]);
+        console.log("INFO: Successful removeProdotto execution");
     }
 
     function updateInfoProdotto(
@@ -175,7 +183,7 @@ contract Tracecoop {
     ) public onlyOwner {
         require(
             checkIfProdottoIsPresent(_idProdotto) == true,
-            "Product not found"
+            "ERROR: Product not found"
         );
         uint256 index;
         for (uint256 i = 0; i < listaProdotti.length; i++) {
@@ -194,21 +202,18 @@ contract Tracecoop {
         listaProdotti[index].sostSoc = _sostSoc;
         listaProdotti[index].isAziendaInnovativa = _isAziendaInnovativa;
         idToProdotto[_idProdotto] = listaProdotti[index];
+        console.log("INFO: Successful updateInfoProdotto execution");
     }
 
     // Retrieve specific output (anni impianto arboreo)
 
-    function getAnniImpianto(
-        string memory _idProdotto
-    ) public view returns (uint256) {
+    function getAnniImpianto(string memory _idProdotto) public view returns(uint256) {
         Prodotto memory target = getProdottoById(_idProdotto);
         uint256 timestamp = block.timestamp;
         uint256 blockYear = (timestamp / 31536000) + 1970; // 31536000 seconds in a year
-        uint256 annoCostruzioneImpianto = target
-            .traccQual
-            .infoTemporali
-            .annoImpianto;
+        uint256 annoCostruzioneImpianto = target.traccQual.infoTemporali.annoImpianto;
         uint256 anniImpianto = blockYear - annoCostruzioneImpianto;
+        console.log("INFO: Successful getAnniImpianto execution");
         return anniImpianto;
     }
 
@@ -222,6 +227,7 @@ contract Tracecoop {
     }
 
     */
+
 
     //utility functions
 
@@ -240,4 +246,5 @@ contract Tracecoop {
         }
         return check;
     }
+
 }
