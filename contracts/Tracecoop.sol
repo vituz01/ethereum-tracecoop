@@ -10,10 +10,6 @@ contract Tracecoop {
 
     address public immutable i_owner;
 
-    constructor() {
-        i_owner = msg.sender;
-    }
-
     // Area di interesse “Tracciabilità/Qualità”
 
     struct Provenienza {
@@ -100,14 +96,18 @@ contract Tracecoop {
         bool isAziendaInnovativa;
     }
 
+    mapping(string => Prodotto) idToProdotto;
+
+    Prodotto[] internal listaProdotti;
+
     modifier onlyOwner() {
         require(msg.sender == i_owner, "ERROR: User is not owner");
         _;
     }
 
-    mapping(string => Prodotto) idToProdotto;
-
-    Prodotto[] internal listaProdotti;
+    constructor() {
+        i_owner = msg.sender;
+    }
 
     // CRUD operations
 
@@ -133,7 +133,6 @@ contract Tracecoop {
         );
         listaProdotti.push(newProdotto);
         idToProdotto[_idProdotto] = newProdotto;
-        
         console.log("INFO: Successful addProdotto execution");
     }
 
