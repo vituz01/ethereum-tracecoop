@@ -10,7 +10,7 @@ This repository is intended to give a Solidity implementation for the Ethereum s
 This has been achieved by the three following steps:
 1. Functional analysis of the client requirements and UML modeling of Tracecoop contract functionalities.
 2. Solidity implementation of an Ethereum smart contract to register and access to product info stored on the chain.
-3. Testing and E2E software validation via unit tests in Mocha.
+3. Testing and E2E software validation via unit tests in Mocha (ongoing).
 
 ## Technologies
 ### Blockchain
